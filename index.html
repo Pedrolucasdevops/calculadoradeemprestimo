@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101a2d">
+    <title>Simulador de Empréstimo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Navegação principal">
+            <a class="brand" href="#" aria-label="Crédito Fácil, início">
+                <span class="brand-mark" aria-hidden="true">C</span>
+                <span>crédito<span class="brand-light">fácil</span></span>
+            </a>
+
+            <div class="sidebar-label">FERRAMENTAS</div>
+            <a class="nav-item active" href="#simulador">
+                <span class="nav-icon" aria-hidden="true">▦</span>
+                Simulador
+            </a>
+            <a class="nav-item" href="#" id="toolsButton" aria-haspopup="dialog">
+                <span class="nav-icon" aria-hidden="true">⚙</span>
+                Ferramentas
+            </a>
+            <div class="sidebar-note">
+                <span class="note-icon" aria-hidden="true">✦</span>
+                <p>Simule condições com transparência e compartilhe a proposta com seu cliente.</p>
+            </div>
+            <div class="sidebar-footer">PAINEL DE CRÉDITO <span>v1.0</span></div>
+        </aside>
+
+        <main class="main-content" id="simulador">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">FERRAMENTA DE ATENDIMENTO</p>
+                    <h1>Simulador de empréstimo</h1>
+                </div>
+                <div class="status-pill"><span></span> Simulação pronta</div>
+            </header>
+
+            <section class="intro">
+                <div>
+                    <h2>Encontre a melhor condição</h2>
+                    <p>Simule o valor das parcelas ou descubra quanto o cliente pode receber pelo limite do cartão.</p>
+                </div>
+                <div class="intro-icon" aria-hidden="true">↗</div>
+            </section>
+
+            <section class="workspace" aria-label="Dados da simulação">
+                <div class="form-panel">
+                    <div class="section-heading">
+                        <span class="step-number">01</span>
+                        <div>
+                            <h3>Dados da simulação</h3>
+                            <p>Preencha as informações para calcular</p>
+                        </div>
+                    </div>
+
+                    <div class="mode-switch" role="group" aria-label="Tipo de cálculo">
+                        <button class="mode-button active" type="button" data-mode="desired" aria-pressed="true">
+                            <span aria-hidden="true">↗</span> Quero receber
+                        </button>
+                        <button class="mode-button" type="button" data-mode="limit" aria-pressed="false">
+                            <span aria-hidden="true">⌁</span> Tenho um limite
+                        </button>
+                    </div>
+
+                    <div class="simulation-inputs">
+                        <div class="input-group">
+                            <label for="valorDesejado" id="valorLabel">Valor que o cliente quer receber</label>
+                            <div class="money-input">
+                                <span>R$</span>
+                                <input type="number" id="valorDesejado" min="0.01" step="0.01" placeholder="0,00" value="1000">
+                            </div>
+                            <small id="valorHint">Informe o valor líquido desejado pelo cliente.</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="quantidadeParcelas">Quantidade de parcelas</label>
+                            <select id="quantidadeParcelas"></select>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <div class="section-heading client-heading">
+                        <span class="step-number">02</span>
+                        <div>
+                            <h3>Enviar para o cliente</h3>
+                            <p>Opcional — compartilhe uma condição pelo WhatsApp</p>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="nomeCliente">Nome do cliente</label>
+                        <input type="text" id="nomeCliente" placeholder="Ex.: Maria Silva" autocomplete="name">
+                    </div>
+                    <div class="input-group">
+                        <label for="telefoneCliente">WhatsApp do cliente</label>
+                        <input type="tel" id="telefoneCliente" placeholder="(11) 99999-9999" autocomplete="tel">
+                        <small id="telefoneHint">Selecione “Enviar” na condição que deseja compartilhar.</small>
+                    </div>
+                </div>
+
+                <div class="results-panel">
+                    <div class="results-heading">
+                        <div>
+                            <div class="result-title-line">
+                                <span class="step-number">03</span>
+                                <h3>Condições disponíveis</h3>
+                            </div>
+                            <p id="resultDescription">Compare o valor das parcelas em cada prazo.</p>
+                        </div>
+                        <span class="result-count">12 opções</span>
+                    </div>
+
+                    <div class="selected-condition" aria-live="polite">
+                        <div>
+                            <p class="selected-condition-label">VALOR DA PARCELA COM JUROS</p>
+                            <strong id="selectedInstallmentValue">—</strong>
+                            <p class="selected-condition-details" id="selectedConditionDetails"></p>
+                        </div>
+                        <span class="selected-condition-icon" aria-hidden="true">✓</span>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Parcelas</th>
+                                    <th>Taxa</th>
+                                    <th>Parcela com juros</th>
+                                    <th>Total no cartão</th>
+                                    <th id="liquidoHeader">Você recebe</th>
+                                    <th><span class="visually-hidden">Compartilhar</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaResultados"></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyState" hidden>
+                            <span aria-hidden="true">ⓘ</span>
+                            <p>Informe um valor válido para ver as condições.</p>
+                        </div>
+                    </div>
+                    <p class="disclaimer">
+                        <span aria-hidden="true">ⓘ</span>
+                        Simulação estimada com as taxas cadastradas. Confirme as condições antes de fechar a operação.
+                    </p>
+                </div>
+            </section>
+
+            <footer class="page-footer">As condições exibidas são uma estimativa e podem variar conforme a operadora.</footer>
+        </main>
+    </div>
+
+    <dialog class="tools-dialog" id="toolsDialog" aria-labelledby="toolsTitle">
+        <div class="tools-dialog-header">
+            <div>
+                <p class="eyebrow">ÁREA DO ADMINISTRADOR</p>
+                <h2 id="toolsTitle">Ferramentas</h2>
+            </div>
+            <button class="dialog-close" id="closeToolsButton" type="button" aria-label="Fechar">×</button>
+        </div>
+        <form class="tools-form" id="adminLoginForm">
+            <p>Informe a senha de administrador para editar as porcentagens.</p>
+            <p class="tools-security-note">Esta senha restringe apenas a interface. Para proteger os dados de verdade, é necessário autenticação no servidor.</p>
+            <label for="adminPassword">Senha do administrador</label>
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
+            <button class="tools-primary-button" type="submit">Acessar ferramentas</button>
+        </form>
+        <form class="tools-form" id="rateEditorForm" hidden>
+            <p>Edite a taxa de cada número de parcelas. As alterações ficam salvas neste navegador.</p>
+            <div class="rate-fields" id="rateFields"></div>
+            <div class="tools-actions">
+                <button class="tools-secondary-button" id="adminLogoutButton" type="button">Sair</button>
+                <button class="tools-primary-button" type="submit">Salvar porcentagens</button>
+            </div>
+        </form>
+        <p class="tools-feedback" id="toolsFeedback" role="status" aria-live="polite"></p>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
